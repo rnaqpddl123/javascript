@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    
+</head>
+<body>
+    데이터 크롤링해서 sql에 저장하기 <br>
+    <input type="text" id="page_num" placeholder="1~6까지의 숫자를 적어주세요"><br>
+
+    <button id="crawling" onclick="crawling_page()">크롤링 버튼</button><br>
+    <div id = "demo"></div>
+
+    <button id="page_btn" onclick="travel_page()">저장된 excel 버튼</button><br>
+    <div id = "demo1"></div>
+    <div id = "demo2"></div>
+    <div id = "demo3"></div>
+    <br><hr><br>
+    <input type="text" id="chart_num" placeholder="1~6까지의 숫자를 적어주세요"><br>
+
+    <button id="chart_btn" onclick="drawChart()">차트 버튼</button>
+    <div id="piechart" style="width: 900px; height: 500px;"></div>
+
+    <div id = "piechart"></div>
+    <script>
+
+        function crawling_page() {
+            const xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {                 
+                    if (this.readyState == 4 && this.status == 200) {  // 정상응답 완료 여부 검증
+                        
+                        data = this.responseText;
+                        console.log(data);
+                        document.getElementById("demo").innerText = data;
+                        
+                    }   
+                };
+                xhttp.open("POST", "information");
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                queryString = "page_num=" + document.getElementById("page_num").value;
+                xhttp.send(queryString);
+        }
+
+        function travel_page() {
+            const xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {                 
+                    if (this.readyState == 4 && this.status == 200) {  // 정상응답 완료 여부 검증
+                        
+                        data = this.responseText;
+                        console.log(data);
+                        
+                        ytb_data = eval(data);
+                        
+                        console.log(ytb_data);
+                        ytb_data = JSON.parse(ytb_data);
+                        console.log(typeof ytb_data);
+                        console.log(ytb_data);
+                        
+                        document.getElementById("demo1").innerText = ytb_data[0].title;
+                        document.getElementById("demo2").innerHTML = ytb_data[1].title;
+                        
+                    }   
+                };
+                xhttp.open("get", "info");
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                queryString = "page_num=" + document.getElementById("page_num").value;
+                xhttp.send(queryString);
+        }
+    </script>
+
+
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+        google.charts.load('current', { 'packages': ['corechart'] });
+
+
+        function drawChart() {
+            const xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {                 
+                    if (this.readyState == 4 && this.status == 200) {  // 정상응답 완료 여부 검증                     
+                        data = this.responseText;           
+                        data = eval(data);
+                        // console.log(data);
+
+                        chas = [['Task', 'Hours per Day']]; 
+
+                        /
+                        for (let i in data){
+                            chas.push([data[i].title, data[i].sub]);
+                        }
+
+                        
+                        var chart_data = google.visualization.arrayToDataTable(chas);
+
+                        var options = {
+                            title: '구독자수 비율'
+                        };
+
+                        //어디에 어떤 차트를 그릴 것인가에 댛한 모든 정보를 보유한 객체 생성
+                        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+                        //chart를 표현하는 실제 함수
+                        chart.draw(chart_data, options);
+
+                    }   
+                };
+                xhttp.open("post", "chart_info");
+                queryString = "chart_num="+document.getElementById('chart_num').value;
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send(queryString);
+
+                // queryString = "input="+document.getElementById('input').value
+                // xhttp.open("POST", "search");
+                // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                // xhttp.send(queryString);
+
+
+           
+        }
+
+    </script>
+</body>
+</html>
+
+
+
+
+

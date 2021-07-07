@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!--
+        1. google에서 chart개발 가능한 libray 제공
+        2. 사용자인 개발자들은 매우 쉬운 방식으로 chart
+    -->
+    
+</head>
+
+<body>
+    <h3>구글 차트 만들고  응용하기</h3>
+
+    <button id="chart_btn" onclick="drawChart()">버튼</button>
+    <br><hr><br>
+
+    <div id="piechart" style="width: 900px; height: 500px;"></div>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        //구글에서 제공하는 다양한 차트중 corechart를 사용하겠다는선언 
+        google.charts.load('current', { 'packages': ['corechart'] });
+
+        //현코드 상에서 차트가 그려지는 시점은 js 코드들이 실행되면서 그려짐
+        //client들의 이벤트 action감지 없이 렌더링
+        //Load : 랜더링 즉 브라우저가 body tag가 읽혀지면 자동실행하겠다는 이벤트처리함수
+        // google.charts.setOnLoadCallback(drawChart);
+
+        //google.visualization.arrayToDataTable() :  배열데이터로 chart 데이터로 사용하겠다는 설정
+        function drawChart() {
+
+            chas = [['Task', 'Hours per Day']];
+            // chas = [['Task', 'Hours per Day'],
+            //         ['Work', 11],
+            //         ['Eat', 2],
+            //         ['Commute', 2],
+            //         ['Watch TV', 2],
+            //         ['Sleep', 7]
+            //     ];
+            
+
+            // chas['work'] = 11;
+            // chas['eat'] = 2;
+            chas.push(['Work', 11]);
+            chas.push(['Eat', 2]);
+            console.log(chas);
+            console.log(typeof chas);
+            
+
+            var data = google.visualization.arrayToDataTable(chas);
+
+            var options = {
+                title: '나의 하루일과'
+            };
+
+            //어디에 어떤 차트를 그릴 것인가에 댛한 모든 정보를 보유한 객체 생성
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+            //chart를 표현하는 실제 함수
+            chart.draw(data, options);
+        }
+    </script>
+</body>
+
+</html>
