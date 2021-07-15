@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <button onclick="dataReq()">클릭</button>
+
+    <br><hr><br>
+
+    <!--
+        tag의 속성으로 css를 적용하는 inline 방식
+        tag가 존재하나 안 보이게 하는 방식
+        단 display : block인 경우 tag가 보임
+
+        style="display: none;
+    -->
+    <table id="t" border="1" style="display: none;">
+        
+        <tr><th>key</th><th>doc_count</th></tr>
+        <tbody id="dataview"></tbody>
+
+
+
+    </table>
+
+    <script>
+        /*
+        1단계 : 응답받은 데이터를 json 포멧의 객체로 변환
+        2단계 : 
+        */
+        function dataReq() {
+            const xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    data = this.responseText;
+                    // data = "["+data+"]"; // 유지현씨꺼 쓰려면 이것도 추가해줘야함
+                    data = eval("(" + data + ")");
+                    console.log(data);
+
+                    // table 스타일을 block값으로 수정
+                    // style="display: none;
+                    document.getElementById("t").style.display = "block";
+
+                    // table row생성
+                    // tb = ''
+                    tb = ''
+                    asd = ''
+                    for (i=0; i < data.length; i++){
+                            tb = tb + "<tr><th>"+data[i].key + "</th><th>" + data[i].doc_count + "</th></tr>";             
+                        }
+
+                    document.getElementById("dataview").innerHTML = tb;
+                    
+
+                }
+            };
+            xhttp.open("get", "dataget");
+            xhttp.send();
+        }
+    </script>
+
+</body>
+
+</html>
